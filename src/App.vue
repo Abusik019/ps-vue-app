@@ -1,7 +1,12 @@
-<script setup></script>
+<script setup>
+	const getCurrentDate = () => {
+		const now = new Date();
+		return now.toLocaleDateString('ru-RU');
+	};
+</script>
 
 <template>
-	<div>Сегодня: {{ new Date().toLocaleDateString('ru-RU') }}</div>
+  <div>Сегодня: {{ getCurrentDate() }}</div>
 </template>
 
 <style scoped></style>
