@@ -1,7 +1,14 @@
-<script setup></script>
+<script setup>
+import Button from './components/Button.vue';
+
+</script>
 
 <template>
-	<div>Сегодня: {{ new Date().toLocaleDateString('ru-RU') }}</div>
+	<Button>
+		Начать игру
+	</Button>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+
+</style>
