@@ -1,6 +1,35 @@
 :root {
+  --color-primary: #000000;
+  --color-bg: #F0F4F8;
+  --color-primary-inverted: #FFFFFF;
+  --color-bg-card: #272E37;
+  --color-bg-main: #222831;
+  --color-blue: #008BFE;
+  --color-light-blue: #CCE8FF;
+  --color-red: #D00303;
+  --color-green: #09BB00;
+  --font-primary: "Roboto", sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+  color: var(--color-primary);
+  background-color: var(--color-bg);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  min-height: 100vh;
+
+  display: flex;
+  align-items: flex-start ;
+  justify-content: center;
+
+  margin: 0;
+}
+
+#app{
+  width: 100%;
 }
