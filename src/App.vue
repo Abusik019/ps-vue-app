@@ -8,7 +8,7 @@ import Card from './components/Card.vue';
 <template>
 	<header class="header">
 		<h1>Запомни слово</h1>
-		<Score />
+		<Score value="100"/>
 	</header>
 	<main class="main">
 		<!-- <Button>Начать игру</Button> -->

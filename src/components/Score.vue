@@ -1,10 +1,17 @@
 <script setup>
 import HeartIcon from '../assets/icons/HeartIcon.vue';
+
+defineProps({
+    value: {
+        type: Number,
+        default: 0
+    }
+})
 </script>
 
 <template>
     <div class="score">
-        <span>100</span>
+        <span>{{ value }}</span>
         <HeartIcon />
     </div>
 </template>

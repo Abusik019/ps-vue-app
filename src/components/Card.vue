@@ -1,19 +1,27 @@
 <script setup>
-const emit = defineEmits(['rotate', 'changeStatus'])
+import { ref } from 'vue';
+
+const emit = defineEmits(['rotate', 'changeStatus']);
+const isFlipped = ref(false);
+
+const handleRotate = () => {
+    isFlipped.value = !isFlipped.value;
+    emit('rotate', isFlipped.value);
+}
 </script>
 
 <template>
     <div class="card">
         <div class="content">
             <span class="index">02</span>
-            <h3>armour-piercer</h3>
-            <button class="rotate">Перевернуть</button>
+            <h3>{{ isFlipped ? 'бронебойщик' : 'armour-piercer' }}</h3>
+            <button class="rotate" @click="handleRotate">Перевернуть</button>
         </div>
     </div>
 </template>
 
 <style lang="scss" scoped>
-.card{
+.card {
     width: 250px;
     height: 376px;
 
@@ -23,7 +31,7 @@ const emit = defineEmits(['rotate', 'changeStatus'])
 
     padding: 28px 20px;
 
-    &>.content{
+    &>.content {
         border-radius: 12px;
 
         width: 100%;
@@ -37,7 +45,7 @@ const emit = defineEmits(['rotate', 'changeStatus'])
         align-items: center;
         justify-content: center;
 
-        &>.index{
+        &>.index {
             position: absolute;
             top: -8px;
             left: 16px;
@@ -48,7 +56,7 @@ const emit = defineEmits(['rotate', 'changeStatus'])
             background-color: var(--color-primary-inverted);
         }
 
-        &>.rotate{
+        &>.rotate {
             position: absolute;
             bottom: -9px;
             left: calc(50% - 49px);
@@ -67,7 +75,7 @@ const emit = defineEmits(['rotate', 'changeStatus'])
             border: none;
         }
 
-        &>h3{
+        &>h3 {
             font-size: 18px;
             font-weight: 400;
         }
