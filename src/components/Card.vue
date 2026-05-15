@@ -1,12 +1,29 @@
 <script setup>
 import { ref } from 'vue';
 
+const props = defineProps({
+    word: {
+        type: String,
+        default: ''
+    },
+    translation: {
+        type: String,
+        default: ''
+    },
+    state: {
+        type: String,
+        default: 'closed'
+    },
+    status: {
+        type: String,
+        default: 'pending'
+    },
+})
+
 const emit = defineEmits(['rotate', 'changeStatus']);
-const isFlipped = ref(false);
 
 const handleRotate = () => {
-    isFlipped.value = !isFlipped.value;
-    emit('rotate', isFlipped.value);
+    emit('rotate', props.state);
 }
 </script>
 
@@ -14,7 +31,7 @@ const handleRotate = () => {
     <div class="card">
         <div class="content">
             <span class="index">02</span>
-            <h3>{{ isFlipped ? 'бронебойщик' : 'armour-piercer' }}</h3>
+            <h3>{{ state == 'opened' ? translation : word }}</h3>
             <button class="rotate" @click="handleRotate">Перевернуть</button>
         </div>
     </div>

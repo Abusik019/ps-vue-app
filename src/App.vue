@@ -1,18 +1,31 @@
 <script setup>
+import { ref } from 'vue';
 import Score from './components/Score.vue';
 import Button from './components/Button.vue';
 import Card from './components/Card.vue';
+
+const score = ref(100);
+const card = ref({
+	word: "ball",
+	translation: "мяч",
+	state: "closed",
+	status: "pending"
+});
+
+function stateUpdate(){
+	card.value.state = card.value.state === 'closed' ? 'opened' : 'closed'; 
+}
 
 </script>
 
 <template>
 	<header class="header">
 		<h1>Запомни слово</h1>
-		<Score value="100"/>
+		<Score :value="score"/>
 	</header>
 	<main class="main">
 		<!-- <Button>Начать игру</Button> -->
-		 <Card />
+		 <Card v-bind="card" @rotate="stateUpdate"/>
 	</main>
 </template>
 
