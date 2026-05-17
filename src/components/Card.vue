@@ -1,7 +1,9 @@
 <script setup>
-import { ref } from 'vue';
+import FailIcon from '../assets/icons/FailIcon.vue';
+import SuccessIcon from '../assets/icons/SuccessIcon.vue';
 
 const props = defineProps({
+    id: String,
     word: {
         type: String,
         default: ''
@@ -25,16 +27,44 @@ const emit = defineEmits(['rotate', 'changeStatus']);
 const handleRotate = () => {
     emit('rotate', props.state);
 }
+
+const toggleStatus = (status) => {
+    emit('changeStatus', status);
+}
 </script>
 
 <template>
-    <div class="card">
-        <div class="content">
-            <span class="index">02</span>
-            <h3>{{ state == 'opened' ? translation : word }}</h3>
+    <li class="card">
+        <div v-if="state == 'closed'" class="content">
+            <span class="index">{{ id }}</span>
+            <h3>{{ word }}</h3>
             <button class="rotate" @click="handleRotate">Перевернуть</button>
         </div>
-    </div>
+        <div v-else-if="state == 'opened' && status == 'pending'" class="content">
+            <span class="index">02</span>
+            <h3>{{ translation }}</h3>
+            <div class="card-buttons">
+                <button class="rotate" @click="toggleStatus('failed')">
+                    <FailIcon />
+                </button>
+                <button class="rotate" @click="toggleStatus('success')">
+                    <SuccessIcon />
+                </button>
+            </div>
+        </div>
+        <div v-else-if="state == 'opened' && status == 'success'" class="content">
+            <span class="index">02</span>
+            <div class="result"><SuccessIcon width="36" height="36" /></div>
+            <h3>{{ word }}</h3>
+            <button class="rotate" @click="handleRotate">Завершено</button>
+        </div>
+        <div v-else class="content">
+            <span class="index">02</span>
+            <div class="result"><FailIcon width="36" height="36" /></div>
+            <h3>{{ word }}</h3>
+            <button class="rotate" @click="handleRotate">Завершено</button>
+        </div>
+    </li>
 </template>
 
 <style lang="scss" scoped>
@@ -47,6 +77,8 @@ const handleRotate = () => {
     background-color: var(--color-primary-inverted);
 
     padding: 28px 20px;
+
+    list-style-type: none;
 
     &>.content {
         border-radius: 12px;
@@ -95,6 +127,34 @@ const handleRotate = () => {
         &>h3 {
             font-size: 18px;
             font-weight: 400;
+        }
+
+        &>.card-buttons{
+            display: flex;
+            align-items: center;
+            gap: 32px;
+
+            position: absolute;
+            bottom: -9px;
+            left: calc(50% - 40px);
+
+            background-color: var(--color-primary-inverted);
+
+            &>button{
+                background: none;
+                border: none;
+
+                width: 24px;
+                height: 24px;
+
+                cursor: pointer;
+            }
+        }
+
+        &>.result{
+            position: absolute;
+            top: -13px;
+            left: calc(50% - 18px);
         }
     }
 }

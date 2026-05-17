@@ -5,15 +5,41 @@ import Button from './components/Button.vue';
 import Card from './components/Card.vue';
 
 const score = ref(100);
-const card = ref({
-	word: "ball",
-	translation: "мяч",
-	state: "closed",
-	status: "pending"
-});
+const isStarted = ref(false);
+const card = ref([
+	{
+		id: "01",
+		word: "ball",
+		translation: "мяч",
+		state: "closed",
+		status: "pending"
+	},
+	{
+		id: "02",
+		word: "cheese",
+		translation: "масло",
+		state: "closed",
+		status: "pending"
+	},
+	{
+		id: "03",
+		word: "shirt",
+		translation: "футболка",
+		state: "closed",
+		status: "pending"
+	},
+]);
 
-function stateUpdate(){
-	card.value.state = card.value.state === 'closed' ? 'opened' : 'closed'; 
+function stateUpdate(index){
+	card.value[index].state = card.value[index].state === 'closed' ? 'opened' : 'closed'; 
+}
+
+function statusUpdate(index, status){
+	card.value[index].status = status; 
+}
+
+function toggleIsStarted(){
+	isStarted.value = true;
 }
 
 </script>
@@ -24,8 +50,10 @@ function stateUpdate(){
 		<Score :value="score"/>
 	</header>
 	<main class="main">
-		<!-- <Button>Начать игру</Button> -->
-		 <Card v-bind="card" @rotate="stateUpdate"/>
+		<Button v-if="!isStarted" @click="toggleIsStarted">Начать игру</Button>
+		<ul v-else class="card-list">
+			<Card v-for="(value, index) in card" :key="index" v-bind="value" @rotate="stateUpdate(index)" @change-status="statusUpdate(index, $event)"/>
+		</ul>
 	</main>
 </template>
 
@@ -54,7 +82,19 @@ function stateUpdate(){
 	min-height: calc(100vh - 148px);
 
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
+
+	margin-top: 50px;
+
+	&>.card-list{
+		width: 100%;
+		margin: 0 62px;
+
+		display: flex;
+		justify-content: center;
+		gap: 107px;
+		flex-wrap: wrap;	
+	}
 }
 </style>
