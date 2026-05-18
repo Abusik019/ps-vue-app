@@ -14,7 +14,9 @@ export default [
             globals: {
                 console: "readonly",
                 window: "readonly",
-                document: "readonly"
+                document: "readonly",
+                fetch: "readonly",
+                URLSearchParams: "readonly"
             }
         },
         rules: {

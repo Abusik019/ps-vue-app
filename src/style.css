@@ -3,6 +3,7 @@
   --color-bg: #343D4B;
   --color-primary-inverted: #000000;
   --color-bg-card: #272E37;
+  --color-bg-card-hover: #3A434F;
   --color-bg-main: #222831;
   --gradient: linear-gradient(91deg, rgba(144, 217, 224, 0.90) 0.2%, rgba(84, 96, 230, 0.90) 100%);
   --gradient-inverted: linear-gradient(256deg, rgba(144, 217, 224, 0.90) 9.04%, rgba(84, 96, 230, 0.90) 92.2%);
@@ -21,4 +22,12 @@ body {
   display: grid;
   place-items: center;
   min-height: 100vh;
+}
+
+ul{
+  padding: 0;
+}
+
+li{
+  list-style-type: none;
 }

@@ -18,6 +18,8 @@ const { label = "Не задан", stat } = defineProps({
   display: flex;
   justify-content: space-between;
   gap: 16px;
+
+  margin-bottom: 16px;
 }
 .stat-name {
   font-weight: 700;
