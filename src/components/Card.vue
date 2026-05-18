@@ -41,7 +41,7 @@ const toggleStatus = (status) => {
             <button class="rotate" @click="handleRotate">Перевернуть</button>
         </div>
         <div v-else-if="state == 'opened' && status == 'pending'" class="content">
-            <span class="index">02</span>
+            <span class="index">{{ id }}</span>
             <h3>{{ translation }}</h3>
             <div class="card-buttons">
                 <button class="rotate" @click="toggleStatus('failed')">
@@ -53,13 +53,13 @@ const toggleStatus = (status) => {
             </div>
         </div>
         <div v-else-if="state == 'opened' && status == 'success'" class="content">
-            <span class="index">02</span>
+            <span class="index">{{ id }}</span>
             <div class="result"><SuccessIcon width="36" height="36" /></div>
             <h3>{{ word }}</h3>
             <button class="rotate" @click="handleRotate">Завершено</button>
         </div>
         <div v-else class="content">
-            <span class="index">02</span>
+            <span class="index">{{ id }}</span>
             <div class="result"><FailIcon width="36" height="36" /></div>
             <h3>{{ word }}</h3>
             <button class="rotate" @click="handleRotate">Завершено</button>
