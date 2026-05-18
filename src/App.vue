@@ -6,40 +6,31 @@ import Card from './components/Card.vue';
 
 const score = ref(100);
 const isStarted = ref(false);
-const card = ref([
-	{
-		id: "01",
-		word: "ball",
-		translation: "мяч",
-		state: "closed",
-		status: "pending"
-	},
-	{
-		id: "02",
-		word: "cheese",
-		translation: "масло",
-		state: "closed",
-		status: "pending"
-	},
-	{
-		id: "03",
-		word: "shirt",
-		translation: "футболка",
-		state: "closed",
-		status: "pending"
-	},
-]);
+const cards = ref();
 
 function stateUpdate(index){
-	card.value[index].state = card.value[index].state === 'closed' ? 'opened' : 'closed'; 
+	cards.value[index].state = cards.value[index].state === 'closed' ? 'opened' : 'closed'; 
 }
 
 function statusUpdate(index, status){
-	card.value[index].status = status; 
+	cards.value[index].status = status; 
 }
 
-function toggleIsStarted(){
+async function toggleIsStarted(){
 	isStarted.value = true;
+
+	const res = await fetch("http://localhost:8080/api/random-words");
+
+	if(res.status !== 200){
+		return
+	}
+
+	const data = await res.json();
+	cards.value = data.map(item => ({
+		...item,
+		state: "closed",
+		status: "pending"
+	}));
 }
 
 </script>
@@ -52,7 +43,7 @@ function toggleIsStarted(){
 	<main class="main">
 		<Button v-if="!isStarted" @click="toggleIsStarted">Начать игру</Button>
 		<ul v-else class="card-list">
-			<Card v-for="(value, index) in card" :key="index" v-bind="value" @rotate="stateUpdate(index)" @change-status="statusUpdate(index, $event)"/>
+			<Card v-for="(value, index) in cards" :key="index" v-bind="value" @rotate="stateUpdate(index)" @change-status="statusUpdate(index, $event)"/>
 		</ul>
 	</main>
 </template>
