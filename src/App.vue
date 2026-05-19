@@ -1,97 +1,65 @@
 <script setup>
-import {  computed, ref } from "vue";
-import CitySelect from "./components/CitySelect.vue";
-import Stat from "./components/Stat.vue";
-import Error from "./components/Error.vue";
-import DayCard from "./components/DayCard.vue";
+import { ref } from "vue";
+import PaneRight from "./components/PaneRight.vue";
 
-const API_KEY = import.meta.env.VITE_API_KEY;
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_ENDPOINT = "https://api.weatherapi.com/v1";
 
-const data = ref();
+let data = ref();
+let error = ref();
+let activeIndex = ref(0);
 
-const error = ref();
-const errorMap = new Map([
-	[1006, "Указанный город не найден"],
-]);
-const errorDisplay = computed(() => {
-	return errorMap.get(error.value?.error?.code)
-})
-
-const dataModifed = computed(() => {
-	return [
-		{
-			label: "Влажность",
-			stat: data.value.current.humidity + "%"
-		},
-		{
-			label: "Облачность",
-			stat: data.value.current.cloud + "%"
-		},
-		{
-			label: "Ветер",
-			stat: data.value.current.wind_kph + " км/ч"
-		},
-	]
-})
-
-async function getCity(cityName) {
+async function getCity(city) {
 	const params = new URLSearchParams({
-		q: cityName,
+		q: city,
 		lang: "ru",
-		key: API_KEY,
+		key: "6b04fbeb8b6a48d2ba6143411252602",
 		days: 3,
 	});
-
- 	const res = await fetch(`${BASE_URL}/forecast.json?${params.toString()}`);
-	if(res.status !== 200){
+	const res = await fetch(`${API_ENDPOINT}/forecast.json?${params.toString()}`);
+	if (res.status != 200) {
 		error.value = await res.json();
 		data.value = null;
 		return;
 	}
-
-	data.value = await res.json();
 	error.value = null;
+	data.value = await res.json();
 }
-
 </script>
 
 <template>
 	<main class="main">
-		<Error v-if="error" :error="errorDisplay" />
-		<div v-if="data">
-			<Stat v-for="(value, index) in dataModifed" v-bind="value" :key="index" />
-			<ul class="days-list">
-				<DayCard
-					v-for="item in data.forecast.forecastday"
-					:key="item.date" 
-					:weather-code="item.day.condition.code"
-					:temp="item.day.avgtemp_c"
-					:date="new Date(item.date)"
-					:is-today="false"
-				/>
-			</ul>
+		<div class="left"></div>
+		<div class="right">
+			<PaneRight
+				:data 
+				:error 
+				:active-index="activeIndex" 
+				@select-index="(i) => (activeIndex = i)"
+				@select-city="getCity" 
+			/>
 		</div>
-		<CitySelect @select-city="getCity" />
 	</main>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .main {
-	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-	width: 420px;
-	
+.right {
 	background: var(--color-bg-main);
 	padding: 60px 50px;
-	border-radius: 25px;
+	border-radius: 0 25px 25px 0;
+}
 
-	&> div > .days-list{
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 1px;
-
-		margin-top: 64px;
-	}
+.left {
+	width: 500px;
+	height: 680px;
+	border-radius: 30px;
+	background-image: url("/public/bg.png");
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 </style>

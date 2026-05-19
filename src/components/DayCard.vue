@@ -1,63 +1,64 @@
 <script setup>
-import IconCloud from '../icons/weather/IconCloud.vue';
-import IconSun from '../icons/weather/IconSun.vue';
-import IconRain from '../icons/weather/IconRain.vue';
+import { computed } from "vue";
+import IconCloud from "../icons/weather/IconCloud.vue";
+import IconRain from "../icons/weather/IconRain.vue";
+import IconSun from "../icons/weather/IconSun.vue";
 
-const { weatherCode, date, temp, isToday } = defineProps({
+const { weatherCode, temp, date, isActive } = defineProps({
     weatherCode: Number,
-    date: Date,
     temp: Number,
-    isToday: Boolean
-})
+    date: Date,
+    isActive: Boolean,
+});
 
+const iconColor = computed(() => {
+    return isActive ? "var(--color-primary-inverted)" : "var(--color-primary)";
+});
 </script>
-
 <template>
-    <li class="card" :class="{ active: isToday }">
-        <IconSun v-if="weatherCode === 1000"/>
-        <IconRain v-if="weatherCode === 1003"/>
-        <IconCloud v-if="weatherCode === 1009"/>
-        <div class="week-day">{{ date.toLocaleDateString("ru-RU", { weekday: "short" }) }}</div>
-        <div class="temperature">{{ temp }} °C</div>
-    </li>
+    <button class="day-card" :class="{ active: isActive }">
+        <IconSun v-if="weatherCode <= 1003" :color="iconColor" />
+        <IconCloud v-if="weatherCode >= 1006 && weatherCode < 1063" :color="iconColor" />
+        <IconRain v-if="weatherCode >= 1063" :color="iconColor" />
+        <div class="day-card__day">
+            {{ date.toLocaleDateString("ru-RU", { weekday: "short" }) }}
+        </div>
+        <div class="day-card__temp">{{ temp }} °C</div>
+    </button>
 </template>
 
-<style lang="scss" scoped>
-.card{
-    background-color: var(--color-bg-card);
-    color: var(--color-primary);
-
-    padding: 15px 24px 20px 24px;   
-
-    box-shadow: 1px 2px 4px 0px #222831;
-
+<style scoped>
+.day-card {
+    width: 100%;
     border-radius: 10px;
-
+    box-shadow: 1px 2px 4px 0px #222831;
+    color: var(--color-primary);
+    padding: 20px 24px;
+    background-color: var(--color-bg-card);
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 15px;
+    border: none;
+    cursor: pointer;
+}
 
-    transition: background-color .3s ease;
+.active {
+    background-color: var(--color-primary);
+    color: var(--color-primary-inverted);
+}
 
-    &.active{
-        background-color: var(--color-primary);
-        color: var(--color-bg-card);
-        pointer-events: none;
-    }
+.day-card:not(.active):hover {
+    background-color: #3a434f;
+}
 
-    &>.week-day{
-        font-size: 20px;
-        font-weight: 400;
-    }
+.day-card__day {
+    font-size: 20px;
+}
 
-    &>.temperature{
-        font-size: 20px;
-        font-weight: 700;
-    }
-
-    &:hover{
-        background-color: var(--color-bg-card-hover);
-    }
+.day-card__temp {
+    font-size: 20px;
+    font-weight: 700;
 }
 </style>
