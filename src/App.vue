@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import Score from './components/Score.vue';
 import Button from './components/Button.vue';
 import Card from './components/Card.vue';
@@ -10,6 +10,10 @@ const cards = ref([]);
 
 const SCORE_SUCCESS = 10;
 const SCORE_FAIL = 4;
+
+const gameFinished = computed(() => (
+	cards.value.length > 0 && cards.value.every((card) => card.status !== 'pending')
+));
 
 function stateUpdate(index) {
 	const current = cards.value[index];
@@ -56,6 +60,11 @@ async function startGame() {
 	await fetchCards();
 }
 
+async function restartGame() {
+	score.value = 0;
+	await fetchCards();
+}
+
 
 </script>
 
@@ -66,15 +75,20 @@ async function startGame() {
 	</header>
 	<main class="main">
 		<Button v-if="!isStarted" @click="startGame">Начать игру</Button>
-		<ul v-else class="card-list">
-			<Card
-				v-for="(value, index) in cards"
-				:key="index"
-				v-bind="value"
-				@rotate="stateUpdate(index)"
-				@change-status="statusUpdate(index, $event)"
-			/>
-		</ul>
+		<div v-else class="game">
+			<div v-if="gameFinished" class="game-actions">
+				<Button @click="restartGame">Начать заново</Button>
+			</div>
+			<ul class="card-list">
+				<Card
+					v-for="(value, index) in cards"
+					:key="index"
+					v-bind="value"
+					@rotate="stateUpdate(index)"
+					@change-status="statusUpdate(index, $event)"
+				/>
+			</ul>
+		</div>
 	</main>
 </template>
 
@@ -108,15 +122,29 @@ async function startGame() {
 
 	margin-top: 50px;
 
-	&>.card-list{
-		width: 100%;
-		margin: 0 62px;
-		padding: 0;
+}
 
-		display: grid;
-		grid-template-columns: repeat(4, 250px);
-		justify-content: center;
-		gap: 40px;
-	}
+.game{
+	width: 100%;
+
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+}
+
+.game-actions{
+	display: flex;
+	justify-content: center;
+}
+
+.card-list{
+	width: 100%;
+	margin: 0 62px;
+	padding: 0;
+
+	display: grid;
+	grid-template-columns: repeat(4, 250px);
+	justify-content: center;
+	gap: 40px;
 }
 </style>
