@@ -1,12 +1,25 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, provide, ref, watch } from "vue";
 import PaneRight from "./components/PaneRight.vue";
+import { cityProvide } from "./constants.js";
+import PaneLeft from "./components/PaneLeft.vue";
 
 const API_ENDPOINT = "https://api.weatherapi.com/v1";
 
 let data = ref();
 let error = ref();
 let activeIndex = ref(0);
+let city = ref("Москва");
+
+provide(cityProvide, city);
+
+watch(city, () => {
+	getCity(city.value);
+})
+
+onMounted(() => {
+	getCity(city.value);
+})
 
 async function getCity(city) {
 	const params = new URLSearchParams({
@@ -28,15 +41,23 @@ async function getCity(city) {
 
 <template>
 	<main class="main">
-		<div class="left"></div>
+		<div class="left">
+			<PaneLeft 
+				v-if="data"
+				:date="new Date(data?.forecast?.forecastday[activeIndex]?.date)"
+				:weather-code="data?.forecast?.forecastday[activeIndex]?.day?.condition.code"	
+				:temp="data?.forecast?.forecastday[activeIndex]?.day?.avgtemp_c"
+				:desc="data?.forecast?.forecastday[activeIndex]?.day?.condition.text"	
+			/>
+			<div class="gradient-bg" />
+		</div>
 		<div class="right">
 			<PaneRight
 				:data 
 				:error 
 				:active-index="activeIndex" 
 				@select-index="(i) => (activeIndex = i)"
-				@select-city="getCity" 
-			/>
+				/>
 		</div>
 	</main>
 </template>
@@ -58,8 +79,29 @@ async function getCity(city) {
 	width: 500px;
 	height: 680px;
 	border-radius: 30px;
-	background-image: url("/public/bg.png");
+	background-image: url("/bg.png");
 	background-repeat: no-repeat;
 	background-size: cover;
+
+	position: relative;
+
+	padding: 50px 30px 85px 30px;
+}
+
+.gradient-bg{
+	width: 100%;
+	height: 100%;
+
+	border-radius: 30px;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+
+	background: linear-gradient(152.19deg, rgba(136, 235, 239, 0.9) -0.04%, rgba(83, 91, 230, 0.9) 100%);
+
+	opacity: .8;
+
+	z-index: 0;
 }
 </style>

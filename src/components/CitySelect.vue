@@ -1,25 +1,17 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { inject, ref } from "vue";
 import IconLocation from "../icons/IconLocation.vue";
 import Button from "./Button.vue";
 import Input from "./Input.vue";
+import { cityProvide } from "../constants";
 
-const emit = defineEmits({
-    selectCity(payload) {
-        return payload;
-    },
-});
-
-let city = ref("Moscow");
 let isEdited = ref(false);
-
-onMounted(() => {
-    emit("selectCity", city.value);
-});
+let city = inject(cityProvide);
+let inputValue = ref(city.value);
 
 function select() {
     isEdited.value = false;
-    emit("selectCity", city.value);
+    city.value = inputValue.value;
 }
 
 function edit() {
@@ -30,7 +22,7 @@ function edit() {
 <template>
     <div class="city-select">
         <div v-if="isEdited" class="city-input">
-            <Input v-model="city" v-focus placeholder="Введите город" @keyup.enter="select()" />
+            <Input v-model="inputValue" v-focus placeholder="Введите город" @keyup.enter="select()" />
             <Button @click="select()">Сохранить</Button>
         </div>
         <Button v-else @click="edit()">

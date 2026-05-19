@@ -4,6 +4,7 @@ import DayCard from "./DayCard.vue";
 import CitySelect from "./CitySelect.vue";
 import Stat from "./Stat.vue";
 import { computed } from "vue";
+import { errorMap } from "../constants";
 
 const { error, data, activeIndex } = defineProps({
     error: Object,
@@ -13,24 +14,23 @@ const { error, data, activeIndex } = defineProps({
 
 const emit = defineEmits(["select-index", "select-city"]);
 
-const errorMap = new Map([[1006, "Указанный город не найден"]]);
-
 const statData = computed(() => {
     if (!data) {
         return [];
     }
+    
     return [
         {
             label: "Влажность",
-            stat: data.current.humidity + " %",
+            stat: data.forecast.forecastday[activeIndex].day.avghumidity + " %",
         },
         {
-            label: "Облачность",
-            stat: data.current.cloud + " %",
+            label: "Вероятность дождя",
+            stat: data.forecast.forecastday[activeIndex].day.daily_chance_of_rain + " %",
         },
         {
             label: "Ветер",
-            stat: data.current.wind_kph + " км/ч",
+            stat: data.forecast.forecastday[activeIndex].day.maxwind_kph + " км/ч",
         },
     ];
 });
