@@ -25,7 +25,7 @@ const props = defineProps({
 const emit = defineEmits(['rotate', 'changeStatus']);
 
 const handleRotate = () => {
-    emit('rotate', props.state);
+    emit('rotate');
 }
 
 const toggleStatus = (status) => {
@@ -35,7 +35,7 @@ const toggleStatus = (status) => {
 
 <template>
     <li class="card">
-        <div v-if="state == 'closed'" class="content">
+        <div v-if="state == 'closed' && status == 'pending'" class="content">
             <span class="index">{{ id }}</span>
             <h3>{{ word }}</h3>
             <button class="rotate" @click="handleRotate">Перевернуть</button>
@@ -52,17 +52,13 @@ const toggleStatus = (status) => {
                 </button>
             </div>
         </div>
-        <div v-else-if="state == 'opened' && status == 'success'" class="content">
-            <span class="index">{{ id }}</span>
-            <div class="result"><SuccessIcon width="36" height="36" /></div>
-            <h3>{{ word }}</h3>
-            <button class="rotate" @click="handleRotate">Завершено</button>
-        </div>
         <div v-else class="content">
             <span class="index">{{ id }}</span>
-            <div class="result"><FailIcon width="36" height="36" /></div>
+            <div class="result">
+                <SuccessIcon v-if="status == 'success'" width="36" height="36" />
+                <FailIcon v-else width="36" height="36" />
+            </div>
             <h3>{{ word }}</h3>
-            <button class="rotate" @click="handleRotate">Завершено</button>
         </div>
     </li>
 </template>
